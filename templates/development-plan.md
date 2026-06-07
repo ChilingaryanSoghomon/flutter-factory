@@ -1,3 +1,9 @@
+---
+name: development-plan
+type: template
+description: Использовать как шаблон входного плана перед техническим разбиением Flutter-работы.
+---
+
 # Development Plan / План разработки
 
 Status: draft | approved

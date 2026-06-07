@@ -2,7 +2,6 @@
 name: flutter-engineer
 type: role
 description: Использовать для выполнения одной технической Flutter-задачи от tech-lead в пределах её scope.
-status: draft
 ---
 
 # Роль: Flutter Engineer
