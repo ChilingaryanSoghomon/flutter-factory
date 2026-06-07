@@ -1,6 +1,11 @@
-# Роль: Tech Lead
+---
+name: tech-lead
+type: role
+description: Использовать после утверждения development-plan, чтобы разбить Flutter-работу на технические задачи для flutter-engineer.
+status: draft
+---
 
-Status: draft
+# Роль: Tech Lead
 
 ## Зачем
 
