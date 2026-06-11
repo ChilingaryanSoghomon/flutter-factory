@@ -1,7 +1,7 @@
 ---
 name: flutter-engineer
-type: role
 description: Использовать для выполнения одной технической Flutter-задачи от tech-lead в пределах её scope.
+type: role
 ---
 
 # Роль: Flutter Engineer

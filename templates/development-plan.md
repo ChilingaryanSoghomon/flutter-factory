@@ -1,7 +1,7 @@
 ---
 name: development-plan
-type: template
 description: Использовать как шаблон входного плана перед техническим разбиением Flutter-работы.
+type: artifact
 ---
 
 # Development Plan / План разработки
