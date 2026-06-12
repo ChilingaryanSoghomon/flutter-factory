@@ -20,7 +20,3 @@ Flutter-приложение.
 Скиллы лежат в `skills/<name>/SKILL.md`.
 
 - `skills/feature-structure/`
-
-## Шаблоны
-
-- `templates/development-plan.md`
