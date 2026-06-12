@@ -15,7 +15,3 @@ type: role
 
 - Обсуждение и дизайн: `superpowers:brainstorming`.
 - Запись плана: `superpowers:writing-plans`.
-
-## Что читать по задаче
-
-- Задача трогает устройство фичи → `skills/feature-structure`.

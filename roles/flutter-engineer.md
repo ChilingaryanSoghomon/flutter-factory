@@ -23,7 +23,3 @@ type: role
 - Перед тем как объявить работу готовой: `flutter analyze` и `flutter test`.
 
 Subagents: allowed
-
-## Что читать по задаче
-
-- Задача трогает устройство фичи → `skills/feature-structure`.
