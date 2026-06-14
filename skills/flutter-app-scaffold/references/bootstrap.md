@@ -1,6 +1,6 @@
 # Запуск — шаблон каркаса
 
-Поток: `main` → ран-функция → `App`/`MaterialApp` → splash собирает DI → поддерево приложения. Тема/настройки оболочки и состав фич — отдельно, под приложение.
+Поток: `main` → ран-функция → `App` (настройки оболочки + `MaterialApp`) → splash собирает DI → поддерево приложения. `App` держит `SettingsBloc` (тема, локаль) вне DI, поэтому splash уже тематизирован. Состав фич — под приложение.
 
 ## Точка входа
 
@@ -38,7 +38,7 @@ Future<void> bootstrap(AppConfig appConfig) async {
 
 ## Оболочка
 
-`App` провайдит `AppConfig` и строит `MaterialApp`; `home` — splash. Тему/локаль сюда добавляют отдельно (в каркас не входит).
+`App` провайдит `AppConfig` и `SettingsBloc`, затем строит `MaterialApp`: тему и локаль берёт из `SettingsBloc`, `home` — splash. Настройки — вне DI.
 
 ```dart
 class App extends StatelessWidget {
@@ -47,16 +47,59 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider<AppConfig>(
-      create: (_) => appConfig,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: SplashScreen(
-          diSetup: () => di.setup(appConfig),
-          child: const _AppRoot(), // поддерево приложения после DI
+    return MultiBlocProvider(
+      providers: [
+        Provider<AppConfig>(create: (_) => appConfig),
+        BlocProvider<SettingsBloc>(
+          create: (_) => SettingsBloc()..add(SettingsInitEvent()),
         ),
+      ],
+      child: BlocBuilder<SettingsBloc, SettingsState>(
+        builder: (context, settings) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            locale: settings.locale,
+            theme: ThemeData(brightness: settings.brightness),
+            // localizationsDelegates/supportedLocales добавляют с локализацией
+            home: SplashScreen(
+              diSetup: () => di.setup(appConfig),
+              child: const _AppRoot(), // поддерево приложения после DI
+            ),
+          );
+        },
       ),
     );
+  }
+}
+```
+
+## Настройки оболочки
+
+`SettingsBloc` держит локаль и тему оболочки. Стартовые значения — дефолты устройства: локаль `en`, яркость из `PlatformDispatcher`. `SettingsInitEvent` — заглушка-хук под будущее: когда добавят сохранение, он прочитает сохранённое и заэмитит. Пока почти всегда нужная структура (тема + локализация) уже на месте и не мешает.
+
+```dart
+sealed class SettingsEvent {}
+
+final class SettingsInitEvent extends SettingsEvent {}
+
+class SettingsState {
+  final Locale locale;
+  final Brightness brightness;
+  const SettingsState({required this.locale, required this.brightness});
+}
+
+class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
+  SettingsBloc()
+      : super(
+          SettingsState(
+            locale: const Locale('en'),
+            brightness: PlatformDispatcher.instance.platformBrightness,
+          ),
+        ) {
+    on<SettingsInitEvent>((event, emit) {
+      // заглушка: возвращаем дефолты (en + тема устройства).
+      // позже здесь читается сохранённое и эмитится в state.
+    });
   }
 }
 ```
