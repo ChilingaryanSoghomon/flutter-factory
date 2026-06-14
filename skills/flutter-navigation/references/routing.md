@@ -2,9 +2,21 @@
 
 Движок по умолчанию — `go_router`; он спрятан за `AppNavigator` и сменяем. `AppNavigator` завязан на дерево (навигатор-ключ → контекст), поэтому его раздают через `Provider` в поддереве, а **не** кладут в DI-контейнер. Маршруты и охранники собраны тут, в фичи не протекают.
 
+## Имена маршрутов
+
+Имена и пути экранов — в одной сущности `AppRoutes`, а не строками-литералами по коду. На неё ссылаются и роутер, и переходы (`goNamed(AppRoutes.home)`); фичам не нужен сам класс-роутер.
+
+```dart
+abstract final class AppRoutes {
+  static const home = 'home';
+  static const homePath = '/home';
+  // новый экран — имя и путь сюда
+}
+```
+
 ## Роутер
 
-Класс держит общий `navigatorKey` (его же получает `GoRouter`) и конфиг: наблюдатели (например, аналитика переходов), стартовую локацию, охранников через `redirect`, общий каркас экранов через `ShellRoute` (нижняя навигация и т.п.).
+`AppRouter` держит общий `navigatorKey` (его же получает `GoRouter`) и конфиг: наблюдатели (например, аналитика переходов), стартовую локацию, охранников через `redirect`, общий каркас экранов через `ShellRoute`.
 
 ```dart
 import 'package:go_router/go_router.dart';
@@ -17,7 +29,7 @@ class AppRouter {
 
   final GoRouter _router = GoRouter(
     navigatorKey: navigatorKey,
-    initialLocation: '/home',
+    initialLocation: AppRoutes.homePath,
     debugLogDiagnostics: kDebugMode,
     observers: [/* напр. наблюдатель аналитики переходов */],
     redirect: (context, state) {
@@ -29,11 +41,10 @@ class AppRouter {
         builder: (context, state, child) => AppNavigationShell(child: child),
         routes: [
           GoRoute(
-            name: 'home',
-            path: '/home',
+            name: AppRoutes.home,
+            path: AppRoutes.homePath,
             builder: (context, state) => const HomeScreen(),
           ),
-          // ... остальные разделы; новый экран — новый GoRoute с уникальным name
         ],
       ),
     ],
@@ -41,7 +52,25 @@ class AppRouter {
 }
 ```
 
-Охранник можно держать глобально (как здесь) или на конкретном `GoRoute` — что ближе к правилу.
+`ShellRoute` нужен только когда у группы экранов общий каркас — обычно нижняя навигация (bottom navigation bar): он оборачивает дочерние экраны в постоянный shell. Нет общего каркаса — `GoRoute` кладут прямо в `routes`, без `ShellRoute`. Охранник можно держать глобально (как здесь) или на конкретном `GoRoute`.
+
+## Добавить экран
+
+```dart
+// 1) имя и путь — в AppRoutes
+static const details = 'details';
+static const detailsPath = '/details';
+
+// 2) GoRoute — в routes: внутри ShellRoute, если экран под общим каркасом, иначе сверху
+GoRoute(
+  name: AppRoutes.details,
+  path: AppRoutes.detailsPath,
+  builder: (context, state) => const DetailsScreen(),
+),
+
+// 3) переход из фичи
+context.read<AppNavigator>().goNamed(AppRoutes.details, extra: id);
+```
 
 ## Адаптер под контракт
 
@@ -119,7 +148,7 @@ class _AppRouterScopeState extends State<AppRouterScope> {
 ```text
 common/navigation/
 ├── navigator/   # контракт AppNavigator + адаптер AppNavigatorImpl
-├── router/      # AppRouter: navigatorKey, таблица маршрутов, охранники
+├── router/      # AppRouter, AppRoutes (имена/пути), охранники
 ├── widgets/     # навигационный UI: shell (нижняя навигация), экраны-обёртки
 └── helpers/     # вспомогательное, по необходимости
 ```
