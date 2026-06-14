@@ -13,7 +13,7 @@ type: skill
 ## Что закладывается
 
 - **DI** → `common/core/di/`: абстракция доступа к зависимостям + контейнер + `diSetup`. Шаблон: `references/di.md`.
-- **Запуск** → `main.dart` + `common/core/app/`: точка входа, ран-функция (инициализация до UI, перехват ошибок), оболочка `App`/`MaterialApp` с базовыми настройками оболочки (тема, локаль через `SettingsBloc`), splash-гейт. Шаблон: `references/bootstrap.md`.
+- **Запуск** → `main.dart` + `common/core/app/`: точка входа и сквозной `AppConfig`, ран-функция (инициализация до UI, перехват ошибок), оболочка `App`/`MaterialApp` с базовыми настройками оболочки (тема, локаль через `SettingsBloc`), splash-гейт. Шаблон: `references/bootstrap.md`.
 
 ## Порядок
 
