@@ -1,10 +1,10 @@
 # Простой KV — shared_preferences
 
-Папка: `common/storage/preferences/`. Несекретные значения по ключу. Три объекта: примитивы, их реализация и общий сторедж с конкретным хранением.
+Папка: `common/storage/preferences/`. Несекретные значения по ключу. Контракт, его реализация и общий сторедж с конкретным хранением.
 
-## 1. Примитивы — что вообще умеем
+## 1. Контракт — что вообще умеем
 
-`common/storage/preferences/key_value_storage.dart` — абстракция: какие операции доступны (положить/взять по ключу). Сюда смотришь, чтобы понять, *как* можно сохранить.
+`common/storage/preferences/key_value_storage.dart` — абстракция: какие операции доступны (положить/взять по ключу). Через неё приложение не привязано к конкретному пакету — сменишь способ хранения, потребителей не трогаешь.
 
 ```dart
 abstract class KeyValueStorage {
@@ -20,15 +20,15 @@ abstract class KeyValueStorage {
 
 Набор минимальный — добавляй типы (`int`, `double`, список) по мере надобности.
 
-## 2. Реализация примитивов — поверх `shared_preferences`
+## 2. Реализация — поверх `shared_preferences`
 
-`common/storage/preferences/key_value_storage_impl.dart`. Механизм, создаётся один раз при сборке; конкретный `shared_preferences` дальше нигде не виден.
+`common/storage/preferences/key_value_storage_impl.dart`. Конкретный `shared_preferences` виден только здесь.
 
 ```dart
 import 'package:shared_preferences/shared_preferences.dart';
 
 class KeyValueStorageImpl implements KeyValueStorage {
-  KeyValueStorageImpl(SharedPreferences prefs) : _prefs = prefs;
+  KeyValueStorageImpl({required SharedPreferences prefs}) : _prefs = prefs;
 
   final SharedPreferences _prefs;
 
@@ -52,11 +52,11 @@ class KeyValueStorageImpl implements KeyValueStorage {
 
 ## 3. Общий сторедж — где живёт конкретное хранение
 
-`common/storage/preferences/shared_prefs_storage.dart`. Держит примитивы (`KeyValueStorage`) и пишет на них осмысленные методы под конкретные данные. **Это тот файл, где ты делаешь реализацию хранения**; какие операции доступны — смотри в `KeyValueStorage`.
+`common/storage/preferences/shared_prefs_storage.dart`. Держит контракт (`KeyValueStorage`) и пишет на нём осмысленные методы под конкретные данные. **Это тот файл, где ты делаешь реализацию хранения**; какие операции доступны — смотри в контракте.
 
 ```dart
 class SharedPrefsStorage {
-  SharedPrefsStorage(KeyValueStorage kv) : _kv = kv;
+  SharedPrefsStorage({required KeyValueStorage kv}) : _kv = kv;
 
   final KeyValueStorage _kv;
 
@@ -70,18 +70,8 @@ class SharedPrefsStorage {
 }
 ```
 
-Кто хранит конкретные данные (репозиторий и т.п.) — просит `SharedPrefsStorage`, а не лезет в примитивы и ключи сам.
+Кто хранит конкретные данные (репозиторий и т.п.) — просит `SharedPrefsStorage` из контейнера, а не лезет в контракт и ключи сам. Сторедж не обязан быть один — большой можно разбить на несколько, каждый поверх того же `KeyValueStorage`.
 
 ## Регистрация
 
-При сборке зависимостей: примитивы — на готовом `SharedPreferences`, сторедж — поверх примитивов.
-
-```dart
-final prefs = await SharedPreferences.getInstance();
-di.registerSingleton<KeyValueStorage>(KeyValueStorageImpl(prefs));
-di.registerLazySingleton<SharedPrefsStorage>(
-  (r) => SharedPrefsStorage(r.resolve<KeyValueStorage>()),
-);
-```
-
-Дальше берёшь `SharedPrefsStorage` из контейнера.
+Один раз при сборке приложения в DI-контейнер кладутся два объекта: контракт `KeyValueStorage` — реализацией `KeyValueStorageImpl`, и фасад `SharedPrefsStorage` поверх контракта. Реализации нужен готовый `SharedPreferences` — он берётся асинхронно, получи его до регистрации. Как класть в контейнер — это часть про контейнер; дальше потребители берут `SharedPrefsStorage` оттуда, реализация в их коде не появляется.

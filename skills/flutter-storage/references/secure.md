@@ -1,8 +1,8 @@
 # Защищённый KV — flutter_secure_storage
 
-Папка: `common/storage/secure/`. Секретные значения по ключу: токены, ключи, пароли. На устройстве — Keychain (iOS) / Keystore (Android). Три объекта: примитивы, их реализация и общий сторедж с конкретным хранением.
+Папка: `common/storage/secure/`. Секретные значения по ключу: токены, ключи, пароли. На устройстве — Keychain (iOS) / Keystore (Android). Контракт, его реализация и общий сторедж с конкретным хранением.
 
-## 1. Примитивы — что вообще умеем
+## 1. Контракт — что вообще умеем
 
 `common/storage/secure/secure_storage.dart` — абстракция: какие операции доступны (положить/взять/удалить секрет по ключу).
 
@@ -17,16 +17,15 @@ abstract class SecureStorage {
 
 Отдельный тип от `KeyValueStorage` — нарочно: секрет нельзя случайно положить в простой KV, нужно осознанно взять `SecureStorage`. Тип = намерение.
 
-## 2. Реализация примитивов — поверх `flutter_secure_storage`
+## 2. Реализация — поверх `flutter_secure_storage`
 
-`common/storage/secure/secure_storage_impl.dart`. Механизм; конкретный `flutter_secure_storage` дальше нигде не виден.
+`common/storage/secure/secure_storage_impl.dart`. Конкретный `flutter_secure_storage` виден только здесь.
 
 ```dart
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SecureStorageImpl implements SecureStorage {
-  SecureStorageImpl([FlutterSecureStorage? storage])
-      : _storage = storage ?? const FlutterSecureStorage();
+  SecureStorageImpl({required FlutterSecureStorage storage}) : _storage = storage;
 
   final FlutterSecureStorage _storage;
 
@@ -47,11 +46,11 @@ class SecureStorageImpl implements SecureStorage {
 
 ## 3. Общий сторедж — где живёт конкретное хранение
 
-`common/storage/secure/secrets_storage.dart`. Держит примитивы (`SecureStorage`) и пишет на них осмысленные методы под конкретные секреты. **Это тот файл, где ты делаешь реализацию хранения**; какие операции доступны — смотри в `SecureStorage`.
+`common/storage/secure/secrets_storage.dart`. Держит контракт (`SecureStorage`) и пишет на нём осмысленные методы под конкретные секреты. **Это тот файл, где ты делаешь реализацию хранения**; какие операции доступны — смотри в контракте.
 
 ```dart
 class SecretsStorage {
-  SecretsStorage(SecureStorage storage) : _storage = storage;
+  SecretsStorage({required SecureStorage storage}) : _storage = storage;
 
   final SecureStorage _storage;
 
@@ -65,20 +64,11 @@ class SecretsStorage {
 }
 ```
 
-Кто хранит конкретные секреты (репозиторий и т.п.) — просит `SecretsStorage`, а не лезет в примитивы и ключи сам.
+Кто хранит конкретные секреты (репозиторий и т.п.) — просит `SecretsStorage` из контейнера, а не лезет в контракт и ключи сам.
 
 ## Регистрация
 
-При сборке зависимостей: примитивы и поверх них — сторедж.
-
-```dart
-di.registerLazySingleton<SecureStorage>((r) => SecureStorageImpl());
-di.registerLazySingleton<SecretsStorage>(
-  (r) => SecretsStorage(r.resolve<SecureStorage>()),
-);
-```
-
-Дальше берёшь `SecretsStorage` из контейнера.
+Один раз при сборке приложения в DI-контейнер кладутся два объекта: контракт `SecureStorage` — реализацией `SecureStorageImpl` (ей нужен экземпляр `FlutterSecureStorage`), и фасад `SecretsStorage` поверх контракта. Как класть в контейнер — это часть про контейнер; дальше потребители берут `SecretsStorage` оттуда.
 
 ## Платформенные заметки
 

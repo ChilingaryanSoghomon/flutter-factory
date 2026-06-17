@@ -52,7 +52,7 @@ abstract class NotesDao {
 }
 
 class NotesDaoImpl implements NotesDao {
-  NotesDaoImpl(this._db);
+  NotesDaoImpl({required Database db}) : _db = db;
 
   final Database _db;
 
@@ -76,12 +76,4 @@ class NotesDaoImpl implements NotesDao {
 
 ## Регистрация
 
-БД открывается один раз при сборке зависимостей; DAO раздаёшь поверх неё:
-
-```dart
-final database = await AppDatabase.open();
-di.registerSingleton<AppDatabase>(database);
-di.registerLazySingleton<NotesDao>((r) => NotesDaoImpl(r.resolve<AppDatabase>().db));
-```
-
-Схема и миграции (`version` + `onUpgrade`) — деталь этой папки; запрос живёт внутри DAO, наружу торчит только контракт `NotesDao`.
+Один раз при сборке приложения: `AppDatabase` открывается (асинхронно) и кладётся в контейнер; контракт `NotesDao` — реализацией `NotesDaoImpl` поверх соединения `AppDatabase`. Как класть в контейнер — это часть про контейнер; дальше потребители берут `NotesDao` оттуда. Схема и миграции (`version` + `onUpgrade`) — деталь этой папки; запрос живёт внутри DAO, наружу торчит только контракт `NotesDao`.
