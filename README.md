@@ -17,4 +17,15 @@ Flutter-приложение.
 
 ## Скиллы
 
-Скиллы лежат в `skills/<name>/SKILL.md`. Пока их нет.
+Скиллы лежат в `skills/<name>/SKILL.md`.
+
+- `flutter-analytics`
+- `flutter-api`
+- `flutter-app-scaffold`
+- `flutter-architecture`
+- `flutter-common`
+- `flutter-feature`
+- `flutter-navigation`
+- `flutter-storage`
+- `flutter-testing`
+- `flutter-theme`
