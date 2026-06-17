@@ -13,7 +13,24 @@ type: skill
 ## Что закладывается
 
 - **DI** → `common/core/di/`: абстракция доступа к зависимостям + контейнер + `diSetup`. Шаблон: `references/di.md`.
-- **Запуск** → `main.dart` + `common/core/app/`: точка входа и сквозной `AppConfig`, ран-функция (инициализация до UI, перехват ошибок), оболочка `App`/`MaterialApp` с базовыми настройками оболочки (тема, локаль через `SettingsBloc`), splash-гейт. Шаблон: `references/bootstrap.md`.
+- **Запуск** → `main.dart` + `common/core/`: точка входа и сквозной `AppConfig`, ран-функция (инициализация до UI, перехват ошибок), оболочка `App`/`MaterialApp`, splash-гейт (`core/splash/`). Тема и локаль оболочки — из `SettingsBloc`, он живёт как фича (`features/settings/`), оболочка лишь поднимает его на старте. Шаблон: `references/bootstrap.md`.
+
+## Раскладка
+
+```text
+lib/
+├── main.dart                # точка входа → ран-функция
+└── src/
+    ├── common/core/
+    │   ├── di/              # абстракция доступа + контейнер + diSetup
+    │   ├── config/          # AppConfig (контракт)
+    │   ├── app/             # ран-функция (bootstrap), App + MaterialApp (оболочка)
+    │   └── splash/          # splash_bloc/_event/_state + splash_screen (DI-гейт)
+    └── features/
+        └── settings/        # settings_bloc/_event/_state — тема и локаль оболочки
+```
+
+`core/` — launch-механика (один раз при запуске): DI, config, оболочка, splash-гейт. `settings` владеет состоянием оболочки (тема, локаль) и дорастёт до экрана — поэтому фича, а не ядро; оболочка `App` лишь поднимает её `SettingsBloc` на старте (это composition root, сборка фич — его работа, границы не нарушены).
 
 ## Порядок
 
