@@ -20,7 +20,7 @@ Flutter-приложение.
 Скиллы лежат в `skills/<name>/SKILL.md`.
 
 - `flutter-analytics`
-- `flutter-api`
+- `flutter-server`
 - `flutter-app-scaffold`
 - `flutter-architecture`
 - `flutter-common`
