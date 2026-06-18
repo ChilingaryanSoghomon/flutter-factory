@@ -1,7 +1,6 @@
 ---
 name: flutter-server
 description: Использовать для серверного слоя Flutter-приложения: внешние backend/provider/base URL источники, source-specific API, DTO request/response, маппинг во внутренние типы, ошибки источника и wiring через DI. Не выбирать конкретную HTTP/GraphQL/Retrofit-библиотеку без контекста проекта.
-type: skill
 ---
 
 # Серверный слой
