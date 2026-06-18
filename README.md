@@ -24,7 +24,7 @@ Flutter-приложение.
 
 Скиллы лежат в `skills/<name>/SKILL.md`.
 
-- `flutter-analytics`
+- `flutter-observability`
 - `flutter-server`
 - `flutter-app-scaffold`
 - `flutter-architecture`
