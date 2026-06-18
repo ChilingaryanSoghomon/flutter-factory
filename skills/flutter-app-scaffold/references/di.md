@@ -83,7 +83,7 @@ class DiContainer implements Registrar, Resolver {
 
 ## Сборка (diSetup)
 
-Берёт `AppConfig`, регистрирует зависимости в `Registrar` и возвращает `Resolver`. Тип регистрации — контракт, объект — его реализация; объект без контракта идёт под своим типом. В примере ниже: `SomeRepository` связывается с `SomeRepositoryImpl`, а `AppConfig` (контракта нет) кладётся под собой.
+Берёт `AppConfig`, регистрирует зависимости в `Registrar` и возвращает `Resolver`. Под каким типом что регистрировать — «Связывание» в `conventions.md`.
 
 ```dart
 Future<Resolver> setup(AppConfig appConfig) async {
