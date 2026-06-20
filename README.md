@@ -14,13 +14,17 @@ Flutter-приложение.
 Единые правила кода — в `conventions.md` (нейминг, конструкторы, слои). Скиллы
 их демонстрируют в примерах; единственный источник правды — этот файл.
 
-## Процесс
+## Процесс: рамки и метод
 
-Ведение задачи (проектирование, планирование, отладка) — на твоём процессе или на superpowers, если он установлен. flutter-factory отвечает за Flutter-часть:
+Замысел — пара. **flutter-factory** задаёт *рамки*: что строим и по каким правилам — архитектура, слои, навигация, хранение, тема, тесты (Flutter-знание). **superpowers** ведёт *процесс*: как это делается — дизайн, планирование, диагностика, реализация, ревью. Это вся его методология, а не отдельные шаги.
 
-- **Проектирование** (новая фича, крупное или неясное изменение): сначала план, потом код. С superpowers — `brainstorming` → `writing-plans`.
-- **Реализация**: код по `conventions.md`; с superpowers план ведут `executing-plans` или `subagent-driven-development`, баг — `systematic-debugging`.
-- Перед «готово»: `flutter analyze` и `flutter test`.
+- **Дизайн и проектирование** → `superpowers:brainstorming`.
+- **Планирование** → `superpowers:writing-plans`.
+- **Реализация плана** → `superpowers:executing-plans` или `superpowers:subagent-driven-development`.
+- **Отладка** → `superpowers:systematic-debugging`.
+- Flutter-часть на всех фазах — по `conventions.md`; перед «готово» — `flutter analyze` и `flutter test`.
+
+Доменные скиллы можно читать и без superpowers (как справку), но полный рабочий метод задуман в паре с ним.
 
 ## Скиллы
 
