@@ -7,7 +7,7 @@
 Из корня проекта:
 
 ```bash
-git submodule add https://github.com/ChilingaryanSoghomon/flutter-factory.git .agents/flutter-factory
+git submodule add git@github.com:ChilingaryanSoghomon/flutter-factory.git .agents/flutter-factory
 ```
 
 ## 2. Создать точки входа в корне проекта
