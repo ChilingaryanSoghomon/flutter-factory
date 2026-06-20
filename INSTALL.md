@@ -1,13 +1,22 @@
 # Установка flutter-factory в проект
 
-Комплект распространяется через GitHub и подключается как git submodule.
+Комплект распространяется через GitHub и подключается как обычный локальный
+`git clone` внутри проекта. Основной репозиторий не должен отслеживать
+`.agents/flutter-factory/`: это отдельный репозиторий с отдельной историей.
 
 ## 1. Подключить к Flutter-проекту
 
 Из корня проекта:
 
 ```bash
-git submodule add git@github.com:ChilingaryanSoghomon/flutter-factory.git .agents/flutter-factory
+mkdir -p .agents
+git clone git@github.com:ChilingaryanSoghomon/flutter-factory.git .agents/flutter-factory
+```
+
+Добавь локальный клон в `.gitignore` основного проекта:
+
+```gitignore
+.agents/flutter-factory/
 ```
 
 ## 2. Создать точки входа в корне проекта
@@ -28,8 +37,11 @@ Always read AGENTS.md at the start of every session and follow it.
 Для Flutter-работы сначала прочитай и выполняй:
 `.agents/flutter-factory/README.md`.
 
-flutter-factory подключён как git submodule. Обновить комплект:
-`git submodule update --remote .agents/flutter-factory`.
+flutter-factory подключён как отдельный локальный git clone. Если папки нет:
+`mkdir -p .agents && git clone git@github.com:ChilingaryanSoghomon/flutter-factory.git .agents/flutter-factory`.
+
+Обновить комплект:
+`git -C .agents/flutter-factory pull --ff-only`.
 ```
 
 ## Поддерживаемые агенты
@@ -49,7 +61,7 @@ https://github.com/obra/superpowers (как плагин агента, по ин
 ## 3. Обновить комплект в проекте
 
 ```bash
-git submodule update --remote .agents/flutter-factory
+git -C .agents/flutter-factory pull --ff-only
 ```
 
 ## Править комплект прямо из проекта
@@ -64,12 +76,13 @@ git commit -am "fix: ..."
 git push
 ```
 
-В других проектах потом подтянуть: `git submodule update --remote .agents/flutter-factory`.
+В других проектах потом подтянуть: `git -C .agents/flutter-factory pull --ff-only`.
 
-## Клонирование проекта с уже подключённым комплектом
+## Клонирование проекта на новой машине
 
 ```bash
-git clone --recurse-submodules <project-url>
-# или, если проект уже склонирован:
-git submodule update --init --recursive
+git clone <project-url>
+cd <project-name>
+mkdir -p .agents
+git clone git@github.com:ChilingaryanSoghomon/flutter-factory.git .agents/flutter-factory
 ```
