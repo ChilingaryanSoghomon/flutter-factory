@@ -33,8 +33,7 @@ lib/src/common/theme/
 `displayLarge`, `headlineMedium`, `titleLarge`, `bodyMedium`, `labelLarge` и
 другие Material-токены.
 
-- Не заводи параллельный `AppTextStyles` только ради размеров шрифта.
-- Не пиши случайные `TextStyle(fontSize: ...)` в экранах и виджетах.
+- Текстовые стили бери из `TextTheme` по смысловой роли — это единственный источник размеров и стилей шрифта.
 - Для особого текста бери ближайший смысловой токен и меняй только отличие:
   `Theme.of(context).textTheme.titleLarge?.copyWith(...)`.
 - Повторяемый нестандартный стиль выноси в тему: настрой `textTheme` при сборке
@@ -42,8 +41,6 @@ lib/src/common/theme/
   хватает.
 
 Сначала выбирай стиль по роли текста в интерфейсе, а не по числу пикселей.
-
-Правильно:
 
 ```dart
 final theme = Theme.of(context);
@@ -53,15 +50,6 @@ Text(
   style: theme.textTheme.titleLarge?.copyWith(
     color: theme.colorScheme.primary,
   ),
-);
-```
-
-Неправильно без причины:
-
-```dart
-Text(
-  title,
-  style: const TextStyle(fontSize: 21, color: Color(0xFF3366FF)),
 );
 ```
 
