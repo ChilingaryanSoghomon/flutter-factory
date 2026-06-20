@@ -1,0 +1,6 @@
+{
+  "name": "flutter-factory",
+  "description": "Комплект для работы с Flutter-приложениями: роли-режимы, доменные скиллы и конвенции кода.",
+  "version": "0.1.0",
+  "skills": "./skills/"
+}

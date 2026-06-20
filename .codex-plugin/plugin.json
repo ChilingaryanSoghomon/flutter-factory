@@ -1,0 +1,12 @@
+{
+  "name": "flutter-factory",
+  "version": "0.1.0",
+  "description": "Комплект для работы с Flutter-приложениями: доменные скиллы и конвенции кода.",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Flutter Factory",
+    "shortDescription": "Flutter-знание: архитектура, фичи, слои данных, навигация, тема, тесты.",
+    "category": "Coding",
+    "capabilities": ["Read", "Write"]
+  }
+}
