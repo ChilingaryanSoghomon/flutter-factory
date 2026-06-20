@@ -22,7 +22,7 @@ lib/
 └── src/
     ├── common/core/
     │   ├── di/              # абстракция доступа + контейнер + diSetup
-    │   ├── config/          # AppConfig (контракт)
+    │   ├── config/          # AppConfig (контракт) + remote config
     │   ├── app/             # ран-функция (bootstrap), App + MaterialApp (оболочка)
     │   └── splash/          # splash_bloc/_event/_state + splash_screen (DI-гейт)
     └── features/

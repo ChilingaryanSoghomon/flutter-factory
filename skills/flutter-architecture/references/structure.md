@@ -9,7 +9,7 @@ lib/
 ├── main_prod.dart                     # optional
 └── src/
     ├── common/                        # общая зона: ядро и всё, что нужно 2+ фичам
-    │   ├── core/                      # сборка и запуск: app, config, di
+    │   ├── core/                      # сборка и запуск: app, config (AppConfig + remote config), di
     │   ├── navigation/                # контракт навигации, router, guards, нав-виджеты
     │   ├── domain/                    # общие контракты и модели интеграций
     │   ├── functions/                 # утилиты
