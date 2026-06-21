@@ -54,6 +54,65 @@ class AppRouter {
 
 `ShellRoute` нужен только когда у группы экранов общий каркас — обычно нижняя навигация (bottom navigation bar): он оборачивает дочерние экраны в постоянный shell. Нет общего каркаса — `GoRoute` кладут прямо в `routes`, без `ShellRoute`. Охранник можно держать глобально (как здесь) или на конкретном `GoRoute`.
 
+## Вкладки с сохранением состояния
+
+Когда каждая вкладка нижней навигации держит свой стек и помнит позицию — вместо `ShellRoute` берут `StatefulShellRoute.indexedStack` (выбирают одно). Каждая вкладка — отдельный `StatefulShellBranch`; каркас принимает `StatefulNavigationShell` вместо `child` и переключает ветки.
+
+```dart
+StatefulShellRoute.indexedStack(
+  builder: (context, state, navigationShell) =>
+      AppNavigationShell(navigationShell: navigationShell),
+  branches: [
+    StatefulShellBranch(
+      routes: [
+        GoRoute(
+          name: AppRoutes.home,
+          path: AppRoutes.homePath,
+          builder: (context, state) => const HomeScreen(),
+        ),
+      ],
+    ),
+    StatefulShellBranch(
+      routes: [
+        GoRoute(
+          name: AppRoutes.settings,
+          path: AppRoutes.settingsPath,
+          builder: (context, state) => const SettingsScreen(),
+        ),
+      ],
+    ),
+  ],
+)
+```
+
+Каркас переключает ветки через `goBranch`; повторный тап по активной вкладке возвращает её к начальной локации:
+
+```dart
+class AppNavigationShell extends StatelessWidget {
+  const AppNavigationShell({required this.navigationShell, super.key});
+
+  final StatefulNavigationShell navigationShell;
+
+  void _goBranch(int index) => navigationShell.goBranch(
+        index,
+        initialLocation: index == navigationShell.currentIndex,
+      );
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        body: navigationShell,
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: navigationShell.currentIndex,
+          onDestinationSelected: _goBranch,
+          destinations: const [
+            NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+            NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
+          ],
+        ),
+      );
+}
+```
+
 ## Добавить экран
 
 ```dart
@@ -142,6 +201,83 @@ class _AppRouterScopeState extends State<AppRouterScope> {
 ```
 
 Это и есть поддерево приложения после splash-гейта DI — то, что подставляют в точку `_AppRoot` каркаса.
+
+## Deep linking
+
+Внешняя ссылка (`https://example.com/details/123`) открывает нужный экран: go_router разбирает путь по `routes`, платформам надо разрешить перехват. Пути берут из `AppRoutes`.
+
+### Android
+
+`AndroidManifest.xml`, внутри `<activity>` для `.MainActivity`:
+
+```xml
+<intent-filter android:autoVerify="true">
+  <action android:name="android.intent.action.VIEW" />
+  <category android:name="android.intent.category.DEFAULT" />
+  <category android:name="android.intent.category.BROWSABLE" />
+  <data android:scheme="http" android:host="example.com" />
+  <data android:scheme="https" />
+</intent-filter>
+```
+
+`assetlinks.json` хостят по `https://example.com/.well-known/assetlinks.json`:
+
+```json
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.example.app",
+    "sha256_cert_fingerprints": ["SHA256_FINGERPRINT"]
+  }
+}]
+```
+
+### iOS
+
+`Info.plist` — включить штатный обработчик (при стороннем плагине вроде `app_links` ставят `NO`):
+
+```xml
+<key>FlutterDeepLinkingEnabled</key>
+<true/>
+```
+
+`Runner.entitlements` — связанный домен:
+
+```xml
+<key>com.apple.developer.associated-domains</key>
+<array>
+  <string>applinks:example.com</string>
+</array>
+```
+
+`apple-app-site-association` (без расширения) хостят по `https://example.com/.well-known/apple-app-site-association`:
+
+```json
+{
+  "applinks": {
+    "apps": [],
+    "details": [{
+      "appIDs": ["TEAM_ID.com.example.app"],
+      "paths": ["*"],
+      "components": [{"/": "/*"}]
+    }]
+  }
+}
+```
+
+### Проверка
+
+```bash
+# Android
+adb shell 'am start -a android.intent.action.VIEW -c android.intent.category.BROWSABLE \
+  -d "https://example.com/details/123"' com.example.app
+
+# iOS (запущенный симулятор)
+xcrun simctl openurl booted https://example.com/details/123
+```
+
+Для web `#` из URL убирает `usePathUrlStrategy()` в `main()` до `runApp`.
 
 ## Структура
 

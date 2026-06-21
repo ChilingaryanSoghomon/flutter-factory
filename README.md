@@ -39,4 +39,9 @@ Flutter-приложение.
 - **flutter-storage** — локальное хранение: настройки и флаги, секреты, структурированные данные в локальной БД.
 - **flutter-theme** — оформление: тема, светлая и тёмная, токены, типографика, применение в UI.
 - **flutter-observability** — видимость работы приложения: аналитика, логирование, отчёты о сбоях.
-- **flutter-testing** — написать или поправить тесты: модульные, логики состояния, виджет-тесты.
+
+## Официальные скиллы
+
+- **Тесты** → `dart-add-unit-test`, `flutter-add-widget-test`, `flutter-add-integration-test`, `dart-generate-test-mocks`, `dart-collect-coverage`.
+- **Адаптивный layout** → `flutter-build-responsive-layout`, `flutter-fix-layout-issues`.
+- **Локализация** → `flutter-setup-localization`.
