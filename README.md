@@ -45,3 +45,6 @@ Flutter-приложение.
 - **Тесты** → `dart-add-unit-test`, `flutter-add-widget-test`, `flutter-add-integration-test`, `dart-generate-test-mocks`, `dart-collect-coverage`.
 - **Адаптивный layout** → `flutter-build-responsive-layout`, `flutter-fix-layout-issues`.
 - **Локализация** → `flutter-setup-localization`.
+- **Статический анализ** → `dart-run-static-analysis`.
+- **Конфликты зависимостей** → `dart-resolve-package-conflicts`.
+- **Паттерн-матчинг** → `dart-use-pattern-matching`.

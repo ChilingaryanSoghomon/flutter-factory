@@ -14,7 +14,7 @@
   `claude mcp add --transport http --scope user context7 https://mcp.context7.com/mcp`
 - **Официальные скиллы** (глобально, `-g`) —
   `npx skills add flutter/skills --agent universal -g --skill flutter-build-responsive-layout --skill flutter-fix-layout-issues --skill flutter-setup-localization --skill flutter-add-widget-test --skill flutter-add-integration-test`
-  и `npx skills add dart-lang/skills --agent universal -g --skill dart-add-unit-test --skill dart-generate-test-mocks --skill dart-collect-coverage`
+  и `npx skills add dart-lang/skills --agent universal -g --skill dart-add-unit-test --skill dart-generate-test-mocks --skill dart-collect-coverage --skill dart-run-static-analysis --skill dart-resolve-package-conflicts --skill dart-use-pattern-matching`
 
 ## В каждом проекте
 
@@ -24,8 +24,8 @@
 - **Точки входа** в корне проекта:
   - `CLAUDE.md`: `Always read AGENTS.md at the start of every session and follow it.`
   - `AGENTS.md`: ссылка на `.agents/flutter-factory/README.md` + строка про клон/обновление комплекта.
-- **Строгий анализатор** — `analysis_options.yaml`:
-  `very_good_analysis` + `strict-casts/strict-inference/strict-raw-types`.
+- **Анализатор** — `analysis_options.yaml`:
+  `flutter_lints` + `strict-casts/strict-inference/strict-raw-types`.
 - **Guardrails** — pre-commit:
   `dart format --set-exit-if-changed . && flutter analyze && flutter test`.
 
