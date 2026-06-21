@@ -15,6 +15,10 @@
 - **Официальные скиллы** (глобально, `-g`) —
   `npx skills add flutter/skills --agent universal -g --skill flutter-build-responsive-layout --skill flutter-fix-layout-issues --skill flutter-setup-localization --skill flutter-add-widget-test --skill flutter-add-integration-test`
   и `npx skills add dart-lang/skills --agent universal -g --skill dart-add-unit-test --skill dart-generate-test-mocks --skill dart-collect-coverage --skill dart-run-static-analysis --skill dart-resolve-package-conflicts --skill dart-use-pattern-matching`
+- **Дизайн-скиллы** (облик до кода, глобально `-g`) —
+  `npx skills add anthropics/skills --agent universal -g --skill frontend-design`
+  и `npx skills add ehmo/platform-design-skills --agent universal -g --skill ios --skill android`
+  (другие платформы — тем же образом по нужде).
 
 ## В каждом проекте
 
