@@ -20,7 +20,6 @@
 
 - **flutter-factory** —
   `git clone git@github.com:ChilingaryanSoghomon/flutter-factory.git .agents/flutter-factory`,
-  затем в `.gitignore` основного проекта: `.agents/flutter-factory/`
 - **Точки входа** в корне проекта:
   - `CLAUDE.md`: `Always read AGENTS.md at the start of every session and follow it.`
   - `AGENTS.md`: ссылка на `.agents/flutter-factory/README.md` + строка про клон/обновление комплекта.
