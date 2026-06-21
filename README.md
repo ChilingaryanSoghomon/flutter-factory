@@ -52,7 +52,7 @@ Flutter-приложение.
 - **platform-design-skills** — платформенные конвенции (iOS, Android и далее):
   нормы облика и доступности под каждую платформу.
 
-Ставятся отдельно — см. `INSTALL.md`.
+Ставятся отдельно для Codex/universal и Claude Code — см. `INSTALL.md`.
 
 ## Официальные скиллы
 
