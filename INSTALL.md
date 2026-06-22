@@ -40,12 +40,22 @@
   - `AGENTS.md`: ссылка на `.agents/flutter-factory/README.md` + строка про клон/обновление комплекта.
 - **Анализатор** — `analysis_options.yaml`:
   `flutter_lints` + `strict-casts/strict-inference/strict-raw-types`.
+- **mcp_toolkit** — `flutter pub add mcp_toolkit`; агент сам дёргает UI
+  (тап, ввод, snapshot), инициализация описана в `flutter-app-scaffold`.
+
+```dart
+  // пример 
+  if (kDebugMode) {
+    MCPToolkitBinding.instance
+      ..initialize()
+      ..initializeFlutterToolkit();
+  }
+```
 - **Guardrails** — pre-commit:
   `dart format --set-exit-if-changed . && flutter analyze && flutter test`.
 
 ## Опционально (по нужде)
 
-- **mcp_toolkit** — агент сам дёргает UI (тап, ввод, snapshot); правит `main.dart`, ставить по проекту.
 - **DCM** — метрики и анти-паттерны (есть бесплатный tier).
 
 ## Обновлять и править комплект
