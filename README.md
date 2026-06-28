@@ -18,10 +18,10 @@ Flutter-приложение.
 
 Замысел — пара. **flutter-factory** задаёт *рамки*: что строим и по каким правилам — архитектура, слои, навигация, хранение, тема, тесты (Flutter-знание). **superpowers** ведёт *процесс*: как это делается — дизайн, планирование, диагностика, реализация, ревью. Это вся его методология, а не отдельные шаги.
 
-- **Дизайн и проектирование** → `superpowers:brainstorming`; облик (до кода) — раздел «Дизайн» ниже.
-- **Планирование** → `superpowers:writing-plans`.
-- **Реализация плана** → `superpowers:executing-plans` или `superpowers:subagent-driven-development`.
-- **Отладка** → `superpowers:systematic-debugging`.
+- **Дизайн и проектирование** → ОБЯЗАТЕЛЬНО `superpowers:brainstorming`; облик (до кода) — раздел «Дизайн» ниже.
+- **Планирование** → ОБЯЗАТЕЛЬНО `superpowers:writing-plans`. План создаётся ТОЛЬКО этим скиллом.
+- **Реализация плана** → ОБЯЗАТЕЛЬНО `superpowers:executing-plans` или `superpowers:subagent-driven-development`.
+- **Отладка** → ОБЯЗАТЕЛЬНО `superpowers:systematic-debugging`.
 - Flutter-часть на всех фазах — по `conventions.md`; перед «готово» — `flutter analyze` и `flutter test`.
 - Ручной/рантайм-smoke — на запущенном Android-эмуляторе (юзер поднимает через Android Studio). Сначала проверь `flutter devices`, не предполагай, что устройства нет.
 
