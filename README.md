@@ -30,7 +30,6 @@ Flutter-приложение.
 - **Реализация плана** → ОБЯЗАТЕЛЬНО `superpowers:executing-plans` или `superpowers:subagent-driven-development`.
 - **Отладка** → ОБЯЗАТЕЛЬНО `superpowers:systematic-debugging`.
 - Flutter-часть на всех фазах — по `conventions.md`; перед «готово» — `flutter analyze` и `flutter test`.
-- Ручной/рантайм-smoke — на запущенном Android-эмуляторе (юзер поднимает через Android Studio). Сначала проверь `flutter devices`, не предполагай, что устройства нет.
 
 **Если скилл не запускается одним вызовом `Skill`** (например, superpowers стоят
 для Codex, а не как Claude-skill) — это НЕ повод пропустить процесс. Прочитай его
