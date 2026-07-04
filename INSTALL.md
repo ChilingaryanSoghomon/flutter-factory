@@ -37,7 +37,26 @@
   `git clone git@github.com:ChilingaryanSoghomon/flutter-factory.git .agents/flutter-factory`,
 - **Точки входа** в корне проекта:
   - `CLAUDE.md`: `Always read AGENTS.md at the start of every session and follow it.`
-  - `AGENTS.md`: ссылка на `.agents/flutter-factory/README.md` + строка про клон/обновление комплекта.
+  - `AGENTS.md`: flutter-factory — ОТДЕЛЬНОЙ секцией верхнего уровня, не пунктом
+    внутри другого раздела (иначе тонет и агент проскакивает — проверено). Клон и
+    обновление сюда НЕ пишем: в самой `AGENTS.md` flutter-factory считается уже на
+    месте. Добавь в `AGENTS.md` ровно такой блок:
+
+```markdown
+## Flutter: обязательные рамки
+
+Любое касание Dart/Flutter-кода (создание, изменение, багфикс, ревью) идёт по
+flutter-factory. Это не рекомендация. ПЕРЕД тем как писать или менять код:
+
+1. Прочитай `.agents/flutter-factory/README.md` и
+   `.agents/flutter-factory/conventions.md`.
+2. Держи `conventions.md` открытым на всех фазах — нейминг, слои, конструкторы
+   берутся оттуда, а не из головы.
+3. Перед «готово» — `flutter analyze` и `flutter test`, оба зелёные.
+
+Пропуск этого шага — ошибка, а не экономия времени.
+```
+
 - **Анализатор** — `analysis_options.yaml`:
   `flutter_lints` + `strict-casts/strict-inference/strict-raw-types`.
 - **mcp_toolkit** — `flutter pub add mcp_toolkit`; агент сам дёргает UI
