@@ -51,6 +51,9 @@ Flutter-приложение.
 ## Официальные скиллы
 
 - **Тесты** → `dart-add-unit-test`, `flutter-add-widget-test`, `flutter-add-integration-test`, `dart-generate-test-mocks`, `dart-collect-coverage`.
+  Структура тестов **обязана** зеркалить структуру проекта: путь в `test/`
+  повторяет путь соответствующего файла в `lib/src/`, имя файла —
+  `<имя>_test.dart`. Это требование, а не рекомендация.
 - **Адаптивный layout** → `flutter-build-responsive-layout`, `flutter-fix-layout-issues`.
 - **Локализация** → `flutter-setup-localization`.
 - **Статический анализ** → `dart-run-static-analysis`.
