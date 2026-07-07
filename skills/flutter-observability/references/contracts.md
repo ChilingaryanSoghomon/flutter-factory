@@ -1,15 +1,15 @@
 # Контракты наблюдаемости
 
-Стартовые абстрактные классы для зоны `common/logging/`. Это контракты — потребитель зависит только от них и берёт из DI. Реализации (`LoggerImpl`, `AnalyticsImpl`) и наблюдатель пишутся отдельно и связываются в `diSetup`; конкретный пакет/SDK остаётся в их импортах.
+Стартовые абстрактные классы для зоны `common/logging/`. Это контракты — потребитель зависит только от них и берёт из DI. Реализации и наблюдатель пишутся отдельно и связываются в `diSetup`; конкретный пакет/SDK остаётся в их импортах.
 
-## Logger — диагностика для разработчика
+## Observability / ErrorReporter
 
 ```dart
 /// Уровень важности сообщения.
 enum LogLevel { debug, info, warning, error }
 
-/// Контракт логирования. Реализация прячет конкретный вывод/SDK.
-abstract class Logger {
+/// Контракт технической видимости. Реализация прячет Sentry/Crashlytics/logger-пакет.
+abstract class ErrorReporter {
   /// Записать сообщение с уровнем; для ошибок передают error и stackTrace.
   void log(
     LogLevel level,
@@ -19,6 +19,8 @@ abstract class Logger {
   });
 }
 ```
+
+Здесь живут сообщения, предупреждения, ошибки, падения и пойманные исключения.
 
 ## Analytics — продуктовые события
 
@@ -30,21 +32,27 @@ abstract class Analytics {
 }
 ```
 
+Здесь только продуктовые события. Без Firestore, SharedPreferences, debug storage и любых методов чтения/записи данных.
+
 ## Наблюдатель BLoC — мост состояний
 
-Наблюдатель не контракт, а реализация-мост: получает `Logger` и `Analytics` через конструктор и шлёт в них переходы состояний. Каркас (тела — на этап реализации):
+Наблюдатель не контракт, а реализация-мост. Он не владеет SDK: получает `ErrorReporter` и, если нужно, `Analytics` через конструктор. `onError` всегда шлёт ошибку в общий reporter; debug-консоль остаётся деталью реализации reporter-а.
 
 ```dart
 class AppBlocObserver extends BlocObserver {
-  AppBlocObserver({required Logger logger, required Analytics analytics})
-      : _logger = logger,
+  AppBlocObserver({
+    required ErrorReporter errorReporter,
+    required Analytics analytics,
+  })
+      : _errorReporter = errorReporter,
         _analytics = analytics;
 
-  final Logger _logger;
+  final ErrorReporter _errorReporter;
   final Analytics _analytics;
 
-  // onChange / onTransition / onError -> _logger.log(...) и/или _analytics.track(...)
+  // onError -> _errorReporter.log(...)
+  // onChange / onTransition -> _analytics.track(...) по необходимости
 }
 ```
 
-Связывание — один раз в `diSetup`: зарегистрировать `Logger` и `Analytics` на их `Impl`, повесить `AppBlocObserver`.
+Связывание — один раз в `diSetup`: зарегистрировать `ErrorReporter` и `Analytics` на их реализации, повесить `AppBlocObserver`.
